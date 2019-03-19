@@ -1,5 +1,6 @@
 .App {
-  text-align: center;
+  width: 3200px;
+  height: 3000px;
 }
 
 .App-logo {
@@ -30,4 +31,22 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.rotate-board90 {
+  display: inline-block;
+  transform: rotate(90deg) translateX(-25%);
+}
+
+.rotate-board180 {
+  margin: 0 auto;
+  width: 846px;
+  height: 702px;
+  transform: rotate(180deg);
+}
+
+.rotate-board270 {
+  display: inline-block;
+  transform: rotate(270deg) translateX(25%);
+
 }
