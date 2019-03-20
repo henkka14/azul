@@ -35,18 +35,32 @@
 
 .rotate-board90 {
   display: inline-block;
-  transform: rotate(90deg) translateX(-25%);
+  transform: rotate(90deg) translateX(-125%);
 }
 
 .rotate-board180 {
+  display: inline-block;
   margin: 0 auto;
   width: 846px;
   height: 702px;
-  transform: rotate(180deg);
+  transform: rotate(180deg) translateX(-135%);
 }
 
 .rotate-board270 {
   display: inline-block;
-  transform: rotate(270deg) translateX(25%);
+  transform: rotate(270deg) translateX(125%);
 
+}
+
+.middle-row {
+  width: 3200px;
+  height: 1350px;
+}
+
+.state-info {
+  display: inline-block;
+  text-align: left;
+  top: 700px;
+  left: 400px;
+  position: absolute;
 }

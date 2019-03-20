@@ -1,0 +1,11 @@
+.number-one {
+    text-align: center;
+    font-size: 60px;
+    font-weight: bold;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    top: 29%;
+    left: 30%;
+    background-color: lavender;
+}

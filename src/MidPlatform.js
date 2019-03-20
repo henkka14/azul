@@ -7,9 +7,9 @@ class MidPlatform extends Component {
     }
 
     render() {
-        const {pieces} = this.props;
+        const {pieces, onClick} = this.props;
         return(
-            <table style={this.props.style}>
+            <table style={this.props.style} onClick={onClick}>
                 <tr>
                     {pieces.map((item, j) => item && j < 5 ? <Piece pieceType={item} /> : null)}
                 </tr>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import './Board.css';
 import Piece from './Piece.js';
 
@@ -8,39 +9,47 @@ class Board extends Component {
         super(props);
 
         this.state = {
-            scoreTrack: 0,
-            wall: Array(5).fill().map(() => Array(5).fill(null)),
-            floorRow: Array(7).fill(),
-            figureRow: Array(5).fill().map((item,i) => Array(i+1).fill(null)),
-        };
-    }
-
-    render() {
-        return(
-            <div>
-                <div className="scoreTrack">
-                    <ScoreTrack figureRow={this.state.figureRow} wall={this.state.wall}/>
-                </div>
-            </div>
-        );
-
-    };
-
-}
-
-class ScoreTrack extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.w = 10;
-        this.h = 10;
-        this.state = {
-            row: 0,
-            column: 0,
             width: 20,
             height: 5,
+            scoreTrack: 0,
+            wall: Array(5).fill().map(() => Array(5).fill(null)),
+            floorRow: [],
+            figureRow: Array(5).fill().map((item,i) => Array(i+1).fill(null)),
+            tookFirst: false,
         };
+        this.boardClicked = this.boardClicked.bind(this);
+    }
+
+    async boardClicked(e, row) {
+        const {chooseMid, changeMid, currentPieces, playerNumber, playerTurn, changeTurn, firstTaken} = this.props;
+        const pieceColor = currentPieces[0];
+        const noOtherTiles = this.state.figureRow[row-1].filter((item) => item !== null && item !== pieceColor).length === 0;
+        const lengthCurrentRow = this.state.figureRow[row-1].filter((item) => item !== null && item === pieceColor).length;
+        
+        if (!chooseMid && noOtherTiles && playerTurn == playerNumber) {
+
+            for (let i = row - 1-lengthCurrentRow; i > row-currentPieces.length - 1 - lengthCurrentRow; i--){
+                await this.setState((state) => {
+                    if (i >= 0) {
+                        state.figureRow[row-1][i] = pieceColor;
+                        return {figureRow: state.figureRow};
+                    }
+                    else {
+                        state.floorRow.push(pieceColor);
+                        return {floorRow: state.floorRow};
+                    }
+                });
+            }
+            if (firstTaken == playerNumber && !this.state.tookFirst) {
+                await this.setState((state) => {
+                    state.floorRow.push("lavender");
+                    return {floorRow: state.floorRow, tookFirst: true};
+                });
+            }
+            changeTurn((playerTurn % 4) + 1);
+            changeMid(true);
+        }
+
     }
 
     scoreTable = () => {
@@ -63,34 +72,33 @@ class ScoreTrack extends Component {
         return table;
     }
 
-    drawFigureRow = () => {
-        const {figureRow} = this.props;
+
+    drawFigureRow = (onClick) => {
         let table = [];
 
-        for (let row of figureRow) {
+        for (let row of this.state.figureRow) {
             let children = [];
 
             for (let i = 0; i < 5 - row.length; i++) {
                 children.push(<td></td>);
             }
             for (let data of row) {
-                children.push(data ? <Piece type={data} /> : <td className="figure-data"></td>);
+                children.push(data ? <Piece pieceType={data} /> : <td className="figure-data"></td>);
             }
 
-            table.push(<tr className="figure-row">{children}</tr>);
+            table.push(<tr ref={"row"+row.length} onClick={(e) => this.boardClicked(e, row.length)} className="figure-row">{children}</tr>);
         }
 
         return table;
     }
 
     drawWall = () => {
-        const {wall} = this.props;
         let table = [];
 
-        for (let x = 0; x < wall.length; x++){
+        for (let x = 0; x < this.state.wall.length; x++){
             let children = [];
 
-            for (let y = 0; y < wall[x].length; y++) {
+            for (let y = 0; y < this.state.wall[x].length; y++) {
                 if (x === y) children.push(<td className="wall-data" style={{backgroundColor: "royalblue"}}></td>);
                 else if ((x + 1) % 5 === y) children.push(<td className="wall-data" style={{backgroundColor: "yellow"}}></td>);
                 else if ((x + 2) % 5 === y) children.push(<td className="wall-data" style={{backgroundColor: "red"}}></td>);
@@ -118,21 +126,23 @@ class ScoreTrack extends Component {
     drawFloorRow() {
         return(
             <tr>
-                <td className="floor-row-data">-1</td>
-                <td className="floor-row-data">-1</td>
-                <td className="floor-row-data">-2</td>
-                <td className="floor-row-data">-2</td>
-                <td className="floor-row-data">-2</td>
-                <td className="floor-row-data">-3</td>
-                <td className="floor-row-data">-3</td>
+                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[0]}}>-1</td>
+                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[1]}}>-1</td>
+                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[2]}}>-2</td>
+                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[3]}}>-2</td>
+                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[4]}}>-2</td>
+                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[5]}}>-3</td>
+                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[6]}}>-3</td>
             </tr>
         );
     }
 
     render() {
+        const {playerNumber} = this.props;
         return(
             <div>
                 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/>
+                <h1 style={{textAlign: "center"}}>Player {playerNumber}</h1>
                 <table>
                     {this.scoreTable()}
                 </table>

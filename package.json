@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "array-equal": "^1.0.0",
+    "equal-array": "^1.0.7",
     "pick-random": "^2.0.0",
     "random-obj-prop": "^1.0.0",
     "react": "^16.8.4",
