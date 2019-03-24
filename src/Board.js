@@ -3,6 +3,16 @@ import ReactDOM from 'react-dom';
 import './Board.css';
 import Piece from './Piece.js';
 
+const MINUS_TILES = [
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+];
+
 class Board extends Component {
 
     constructor(props) {
@@ -18,10 +28,11 @@ class Board extends Component {
             tookFirst: false,
         };
         this.boardClicked = this.boardClicked.bind(this);
+
     }
 
     async boardClicked(e, row) {
-        const {chooseMid, changeMid, currentPieces, playerNumber, playerTurn, changeTurn, firstTaken} = this.props;
+        const {chooseMid, changeMid, currentPieces, playerNumber, playerTurn, changeTurn, firstTaken, scoringTime} = this.props;
         const pieceColor = currentPieces[0];
         const noOtherTiles = this.state.figureRow[row-1].filter((item) => item !== null && item !== pieceColor).length === 0;
         const lengthCurrentRow = this.state.figureRow[row-1].filter((item) => item !== null && item === pieceColor).length;
@@ -54,16 +65,19 @@ class Board extends Component {
 
     scoreTable = () => {
         let table = [];
+        const {playerColor} = this.props;
 
         for (let i=0; i < this.state.height; i++){
             let children = [];
 
             for (let j=0; j < this.state.width; j++) {
-                if (j === 4) children.push(<td className="table-data">{20*i+5}</td>);
-                else if (j === 9) children.push(<td className="table-data">{20*i+10}</td>);
-                else if (j === 14) children.push(<td className="table-data">{20*i+15}</td>);
-                else if (j === 19) children.push(<td className="table-data">{20*i+20}</td>);
-                else children.push(<td className="table-data"></td>);
+                let bgColor = 20*i+j+1===this.state.scoreTrack ? playerColor : "navajowhite";
+
+                if (j === 4) children.push(<td className="table-data" style={{backgroundColor:bgColor}}>{20*i+5}</td>);
+                else if (j === 9) children.push(<td className="table-data" style={{backgroundColor:bgColor}}>{20*i+10}</td>);
+                else if (j === 14) children.push(<td className="table-data" style={{backgroundColor:bgColor}}>{20*i+15}</td>);
+                else if (j === 19) children.push(<td className="table-data" style={{backgroundColor:bgColor}}>{20*i+20}</td>);
+                else children.push(<td className="table-data" style={{backgroundColor:bgColor}}></td>);
             }
             
             table.push(<tr className="table-row">{children}</tr>);
@@ -72,6 +86,18 @@ class Board extends Component {
         return table;
     }
 
+    scoreWall = () => {
+        const {changeScoringTime, playerNumber} = this.props;
+        console.log("scoring player" + playerNumber);
+
+        let minusPoints = 0;
+        for (let i=0; i < this.state.floorRow.length; i++) {
+            minusPoints += MINUS_TILES[i];
+        }
+        this.setState({floorRow: []});
+        console.log(minusPoints);
+
+    }
 
     drawFigureRow = (onClick) => {
         let table = [];

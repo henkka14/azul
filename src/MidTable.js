@@ -15,6 +15,14 @@ const TYPES = [
     "aqua",
 ]
 
+const BAG_TYPES = [
+    "bagRoyalblue",
+    "bagYellow",
+    "bagRed",
+    "bagBlack",
+    "bagAqua",
+]
+
 class MidTable extends Component {
     constructor(props) {
         super(props);
@@ -39,8 +47,16 @@ class MidTable extends Component {
 
 
     addPieces(tileNumber) {
+        const {bagRoyalblue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
         let pieces = Array(4).fill(null);
         let tileList = [];
+        let bagPieces = {
+                         'bagRoyalblue': bagRoyalblue,
+                         'bagYellow': bagYellow,
+                         'bagRed': bagRed,
+                         'bagBlack': bagBlack,
+                         'bagAqua': bagAqua
+                     };
 
         for (let i = 0; i < pieces.length; i++) {
             let filteredTypes = TYPES.filter(type => this.state[type] > 0);
@@ -52,7 +68,24 @@ class MidTable extends Component {
 
                 this.setState((prevState) => { return {[randomType] : prevState[randomType] - 1}});
             }
+            else {
+                let filteredBagTypes = BAG_TYPES.filter(type => bagPieces[type] > 0);
+                let mapBagTypes = {
+                         'bagRoyalblue': 'royalblue',
+                         'bagYellow': 'yellow',
+                         'bagRed': 'red',
+                         'bagBlack': 'black',
+                         'bagAqua': 'aqua',
+                     };
+
+                let randomType = pickRandom(filteredBagTypes)[0];
+                pieces[i] = mapBagTypes[randomType];
+                tileList.push(mapBagTypes[randomType]);
+                bagPieces[randomType] -= 1;
+            }
         }
+
+        changeBagPieces(bagPieces);
 
         this.setState((state) => {
             const list = state.platformTiles.map((item, j) => {
@@ -68,8 +101,19 @@ class MidTable extends Component {
     }
 
     checkIfMidEmpty() {
+        const {changeScoringTime} = this.props;
         if (eq(this.state.platformMidTiles) === eq([]) && eq(this.state.platformTiles.filter(item => eq(item) !== eq([null, null, null, null]))) === eq([])) {
-            this.setState({allPiecesTaken: true});
+            this.setState({allPiecesTaken: true, first: true});
+            this.addPieces(0);
+            this.addPieces(1);
+            this.addPieces(2);
+            this.addPieces(3);
+            this.addPieces(4);
+            this.addPieces(5);
+            this.addPieces(6);
+            this.addPieces(7);
+            this.addPieces(8);
+            changeScoringTime(true);
         }
         else {
             this.setState({allPiecesTaken: false});
@@ -77,7 +121,7 @@ class MidTable extends Component {
     }
 
     async moveToMiddle(event, tileNumber) {
-        const {changeMid, chooseMid, changeCurrentPieces} = this.props;
+        const {changeMid, chooseMid, changeCurrentPieces, scoringTime} = this.props;
         
         if (chooseMid) {
             let pieceColor = event.target.getAttribute("type");
@@ -102,10 +146,7 @@ class MidTable extends Component {
             this.checkIfMidEmpty();
             changeMid(false);
             changeCurrentPieces(chosen);
-
-
         }
-
     }
 
     componentDidMount() {
@@ -142,7 +183,6 @@ class MidTable extends Component {
             changeCurrentPieces(chosen);
         }
     }
-
 
 
     render() {
