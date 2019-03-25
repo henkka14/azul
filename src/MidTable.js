@@ -43,13 +43,13 @@ class MidTable extends Component {
         this.addPieces = this.addPieces.bind(this);
         this.moveToMiddle = this.moveToMiddle.bind(this);
         this.checkIfMidEmpty = this.checkIfMidEmpty.bind(this);
+        this.refillPieces = this.refillPieces.bind(this);
     }
 
 
     addPieces(tileNumber) {
         const {bagRoyalblue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
         let pieces = Array(4).fill(null);
-        let tileList = [];
         let bagPieces = {
                          'bagRoyalblue': bagRoyalblue,
                          'bagYellow': bagYellow,
@@ -64,24 +64,25 @@ class MidTable extends Component {
             if (filteredTypes.length > 0) {
                 let randomType = pickRandom(filteredTypes)[0];
                 pieces[i] = randomType;
-                tileList.push(randomType);
 
                 this.setState((prevState) => { return {[randomType] : prevState[randomType] - 1}});
             }
             else {
                 let filteredBagTypes = BAG_TYPES.filter(type => bagPieces[type] > 0);
-                let mapBagTypes = {
-                         'bagRoyalblue': 'royalblue',
-                         'bagYellow': 'yellow',
-                         'bagRed': 'red',
-                         'bagBlack': 'black',
-                         'bagAqua': 'aqua',
-                     };
+                if (filteredBagTypes.length > 0) {
+                    let mapBagTypes = {
+                            'bagRoyalblue': 'royalblue',
+                            'bagYellow': 'yellow',
+                            'bagRed': 'red',
+                            'bagBlack': 'black',
+                            'bagAqua': 'aqua',
+                        };
 
-                let randomType = pickRandom(filteredBagTypes)[0];
-                pieces[i] = mapBagTypes[randomType];
-                tileList.push(mapBagTypes[randomType]);
-                bagPieces[randomType] -= 1;
+                    let randomType = pickRandom(filteredBagTypes)[0];
+                    pieces[i] = mapBagTypes[randomType];
+
+                    bagPieces[randomType] -= 1;
+                }
             }
         }
 
@@ -90,7 +91,7 @@ class MidTable extends Component {
         this.setState((state) => {
             const list = state.platformTiles.map((item, j) => {
                 if (tileNumber === j)
-                    return tileList;
+                    return pieces;
                 else
                     return item;
             });
@@ -100,19 +101,10 @@ class MidTable extends Component {
         return pieces;
     }
 
-    checkIfMidEmpty() {
+    async checkIfMidEmpty() {
         const {changeScoringTime} = this.props;
         if (eq(this.state.platformMidTiles) === eq([]) && eq(this.state.platformTiles.filter(item => eq(item) !== eq([null, null, null, null]))) === eq([])) {
-            this.setState({allPiecesTaken: true, first: true});
-            this.addPieces(0);
-            this.addPieces(1);
-            this.addPieces(2);
-            this.addPieces(3);
-            this.addPieces(4);
-            this.addPieces(5);
-            this.addPieces(6);
-            this.addPieces(7);
-            this.addPieces(8);
+            await this.setState({allPiecesTaken: true, first: true});
             changeScoringTime(true);
         }
         else {
@@ -120,10 +112,22 @@ class MidTable extends Component {
         }
     }
 
+    async refillPieces() {
+        await this.addPieces(0);
+        await this.addPieces(1);
+        await this.addPieces(2);
+        await this.addPieces(3);
+        await this.addPieces(4);
+        await this.addPieces(5);
+        await this.addPieces(6);
+        await this.addPieces(7);
+        await this.addPieces(8);
+    }
+
     async moveToMiddle(event, tileNumber) {
         const {changeMid, chooseMid, changeCurrentPieces, scoringTime} = this.props;
-        
-        if (chooseMid) {
+        const platformNotEmpty = this.state.platformTiles[tileNumber].filter(item => item === null).length !== 4;
+        if (chooseMid && platformNotEmpty) {
             let pieceColor = event.target.getAttribute("type");
             let chosen = this.state.platformTiles[tileNumber].filter(item => item === pieceColor);
             let notChosen = this.state.platformTiles[tileNumber].filter(item => item !== pieceColor);
@@ -186,18 +190,19 @@ class MidTable extends Component {
 
 
     render() {
+        const {finalRound} = this.props;
         return(
         [
-            <Platform onClick={(e) => this.moveToMiddle(e, 0)} pieces={this.state.platformTiles[0]} style={{position: "absolute", top: "15%", left: "30%"}}/>,
-            <Platform onClick={(e) => this.moveToMiddle(e, 1)} pieces={this.state.platformTiles[1]} style={{position: "absolute", top: "35%", left: "10%"}}/>,
-            <Platform onClick={(e) => this.moveToMiddle(e, 2)} pieces={this.state.platformTiles[2]} style={{position: "absolute", top: "55%", left: "10%"}}/>,
-            <Platform onClick={(e) => this.moveToMiddle(e, 3)} pieces={this.state.platformTiles[3]} style={{position: "absolute", top: "75%", left: "20%"}}/>,
-            <Platform onClick={(e) => this.moveToMiddle(e, 4)} pieces={this.state.platformTiles[4]} style={{position: "absolute", top: "75%", left: "40%"}}/>,
-            <Platform onClick={(e) => this.moveToMiddle(e, 5)} pieces={this.state.platformTiles[5]} style={{position: "absolute", top: "75%", left: "60%"}}/>,
-            <Platform onClick={(e) => this.moveToMiddle(e, 6)} pieces={this.state.platformTiles[6]} style={{position: "absolute", top: "55%", left: "70%"}}/>,
-            <Platform onClick={(e) => this.moveToMiddle(e, 7)} pieces={this.state.platformTiles[7]} style={{position: "absolute", top: "35%", left: "70%"}}/>,
-            <Platform onClick={(e) => this.moveToMiddle(e, 8)} pieces={this.state.platformTiles[8]} style={{position: "absolute", top: "15%", left: "50%"}}/>,
-            <MidPlatform onClick={(e) => this.takeFromMiddle(e)} pieces={this.state.platformMidTiles.sort()} style={{position: "absolute", top: "35%", left: "30%"}}/>,
+            <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 0)} pieces={this.state.platformTiles[0]} style={{position: "absolute", top: "15%", left: "30%"}}/>,
+            <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 1)} pieces={this.state.platformTiles[1]} style={{position: "absolute", top: "35%", left: "10%"}}/>,
+            <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 2)} pieces={this.state.platformTiles[2]} style={{position: "absolute", top: "55%", left: "10%"}}/>,
+            <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 3)} pieces={this.state.platformTiles[3]} style={{position: "absolute", top: "75%", left: "20%"}}/>,
+            <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 4)} pieces={this.state.platformTiles[4]} style={{position: "absolute", top: "75%", left: "40%"}}/>,
+            <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 5)} pieces={this.state.platformTiles[5]} style={{position: "absolute", top: "75%", left: "60%"}}/>,
+            <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 6)} pieces={this.state.platformTiles[6]} style={{position: "absolute", top: "55%", left: "70%"}}/>,
+            <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 7)} pieces={this.state.platformTiles[7]} style={{position: "absolute", top: "35%", left: "70%"}}/>,
+            <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 8)} pieces={this.state.platformTiles[8]} style={{position: "absolute", top: "15%", left: "50%"}}/>,
+            <MidPlatform onClick={(e) => finalRound ? null : this.takeFromMiddle(e)} pieces={this.state.platformMidTiles.sort()} style={{position: "absolute", top: "35%", left: "30%"}}/>,
             this.state.first ? <table><td className="number-one">1</td></table> : null,
         ]
         );

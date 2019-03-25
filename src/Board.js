@@ -37,7 +37,55 @@ class Board extends Component {
         };
         this.boardClicked = this.boardClicked.bind(this);
         this.floorClicked = this.floorClicked.bind(this);
+        this.scoreFinalPoints = this.scoreFinalPoints.bind(this);
+    }
 
+    scoreFinalPoints() {
+        let tokens = {'royalblue': 0,
+                      'yellow': 0,
+                      'red': 0,
+                      'black': 0,
+                      'aqua': 0,
+                    };
+        let finalPoints = 0;
+
+        for (let row of this.state.wall) {
+            for (let i=0; i < row.length; i++) {
+                tokens[row[i]] += 1;
+            }
+            let fullRow = row.filter((item) => item !== null);
+            if (fullRow.length === 5) finalPoints += 2;
+        }
+
+        for (let i = 0; i < 5; i++) {
+            if (this.state.wall[0][i] !== null &&
+                this.state.wall[1][i] !== null &&
+                this.state.wall[2][i] !== null &&
+                this.state.wall[3][i] !== null &&
+                this.state.wall[4][i] !== null)
+                finalPoints += 7;
+        }
+
+        if (tokens.royalblue === 5) {
+            finalPoints += 10;
+        }
+        if (tokens.yellow === 5) {
+            finalPoints += 10;
+        }
+        if (tokens.red === 5) {
+            finalPoints += 10;
+        }
+        if (tokens.black === 5) {
+            finalPoints += 10;
+        }
+        if (tokens.aqua === 5) {
+            finalPoints += 10;
+        }
+
+
+        this.setState((prevState) => {
+            return {scoreTrack: prevState.scoreTrack + finalPoints};
+        });
     }
 
     async boardClicked(e, row) {
@@ -62,8 +110,9 @@ class Board extends Component {
         const pieceColor = currentPieces[0];
         const noOtherTiles = this.state.figureRow[row-1].filter((item) => item !== null && item !== pieceColor).length === 0;
         const lengthCurrentRow = this.state.figureRow[row-1].filter((item) => item !== null && item === pieceColor).length;
+        const noScoredWallTile = this.state.wall[row-1].filter((item) => item === pieceColor).length === 0;
         
-        if (!chooseMid && noOtherTiles && playerTurn == playerNumber) {
+        if (!chooseMid && noOtherTiles && noScoredWallTile && playerTurn == playerNumber) {
 
             for (let i = row - 1-lengthCurrentRow; i > row-currentPieces.length - 1 - lengthCurrentRow; i--){
                 await this.setState((state) => {
@@ -128,11 +177,12 @@ class Board extends Component {
                     bagPieces[mapBagTypes[pieceColor]] += 1;
                 }
             }
+            changeBagPieces(bagPieces);
+            changeTurn((playerTurn % 4) + 1);
+            changeMid(true);
         }
 
-        changeBagPieces(bagPieces);
-        changeTurn((playerTurn % 4) + 1);
-        changeMid(true);
+
     }
 
     scoreTable = () => {
@@ -159,7 +209,7 @@ class Board extends Component {
     }
 
     scoreWall = async () => {
-        const {chooseMid, changeMid, currentPieces, playerTurn, changeTurn, bagRoyalblue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
+        const {changeFinalRound, bagRoyalblue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
         let scoringRows = [];
         let bagPieces = {
             'bagRoyalblue': bagRoyalblue,
@@ -269,6 +319,10 @@ class Board extends Component {
         });
         this.setState({floorRow: [], tookFirst: false});
 
+        for (let row of this.state.wall) {
+            let fullRow = row.filter((item) => item !== null);
+            if (fullRow.length === 5) changeFinalRound(true);
+        }
         changeBagPieces(bagPieces);
     }
 

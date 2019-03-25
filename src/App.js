@@ -18,6 +18,7 @@ class App extends Component {
         bagRed: 0,
         bagBlack: 0,
         bagAqua: 0,
+        finalRound: false,
     };
 
     this.changeCurrentPieces = this.changeCurrentPieces.bind(this);
@@ -27,6 +28,11 @@ class App extends Component {
     this.gameStateInfo = this.gameStateInfo.bind(this);
     this.firstTaken = this.firstTaken.bind(this);
     this.changeBagPieces = this.changeBagPieces.bind(this);
+    this.changeFinalRound = this.changeFinalRound.bind(this);
+  }
+
+  changeFinalRound(finalRound) {
+    this.setState({finalRound});
   }
 
   changeBagPieces(bagPieces) {
@@ -44,7 +50,7 @@ class App extends Component {
   async changeMid(chooseMid) {
     await this.setState({chooseMid});
 
-    if (this.state.scoringTime && this.state.chooseMid) {
+    if (this.state.scoringTime && this.state.chooseMid && !this.state.finalRound) {
       let board1 = this.refs.Board1;
       let board2 = this.refs.Board2;
       let board3 = this.refs.Board3;
@@ -55,20 +61,28 @@ class App extends Component {
       await board3.scoreWall();
       await board4.scoreWall();
 
+      if (this.state.finalRound) {
+        await board1.scoreFinalPoints();
+        await board2.scoreFinalPoints();
+        await board3.scoreFinalPoints();
+        await board4.scoreFinalPoints();
+      }
+
       await this.setState((prevState) => {
                   return {scoringTime: false,
                           playerTurn: prevState.firstTaken, 
                           firstTaken: 0
                         };
       });
+      await this.refs.midTable.refillPieces();
     }
   }
 
   gameStateInfo() {
     return(
       [
-      <h1>Player {this.state.playerTurn} turn!</h1>,
-      this.state.chooseMid ? <h1>Choose tokens from middle!</h1> : <h1>You have {this.state.currentPieces.length} {this.state.currentPieces[0]} tokens, place them to your figure row!</h1>,
+      this.state.finalRound ? null : <h1>Player {this.state.playerTurn} turn!</h1>,
+      this.state.finalRound ? <h1>Game ended!</h1> : (this.state.chooseMid ? <h1>Choose tokens from middle!</h1> : <h1>You have {this.state.currentPieces.length} {this.state.currentPieces[0]} tokens, place them to your figure row!</h1>),
       ]
     );
   }
@@ -107,6 +121,7 @@ class App extends Component {
                bagRed={this.state.bagRed}
                bagBlack={this.state.bagBlack}
                bagAqua={this.state.bagAqua}
+               changeFinalRound={this.changeFinalRound}
           />
       </div>
 
@@ -129,12 +144,14 @@ class App extends Component {
                                           bagRed={this.state.bagRed}
                                           bagBlack={this.state.bagBlack}
                                           bagAqua={this.state.bagAqua}
+                                          changeFinalRound={this.changeFinalRound}
                                         /></div><div style={{
                                                           display:"inline-block",
                                                           width: "1350px",
                                                           height: "1350px",
                                                           position: "relative",
                                                         }}><MidTable 
+                                                          ref="midTable"
                                                           chooseMid={this.state.chooseMid}
                                                           changeMid={this.changeMid}
                                                           currentPieces={this.state.currentPieces}
@@ -149,6 +166,7 @@ class App extends Component {
                                                           bagBlack={this.state.bagBlack}
                                                           bagAqua={this.state.bagAqua}
                                                           changeBagPieces={this.changeBagPieces}
+                                                          finalRound={this.state.finalRound}
                                                         /></div><div 
                                                           className="rotate-board270"
                                                         ><Board
@@ -168,7 +186,8 @@ class App extends Component {
                                                           bagYellow={this.state.bagYellow}
                                                           bagRed={this.state.bagRed}
                                                           bagBlack={this.state.bagBlack}
-                                                          bagAqua={this.state.bagAqua}/></div>
+                                                          bagAqua={this.state.bagAqua}
+                                                          changeFinalRound={this.changeFinalRound}/></div>
       </div>
 
       <div style={{margin:"0 auto", width: "846px", height: "702px"}}>
@@ -188,7 +207,8 @@ class App extends Component {
                bagYellow={this.state.bagYellow}
                bagRed={this.state.bagRed}
                bagBlack={this.state.bagBlack}
-               bagAqua={this.state.bagAqua}/>
+               bagAqua={this.state.bagAqua}
+               changeFinalRound={this.changeFinalRound}/>
       </div>
 
       </div>
