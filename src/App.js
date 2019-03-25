@@ -13,11 +13,11 @@ class App extends Component {
         playerTurn: 1,
         firstTaken: 0,
         scoringTime: false,
-        bagRoyalblue: 5,
-        bagYellow: 5,
-        bagRed: 5,
-        bagBlack: 5,
-        bagAqua: 5,
+        bagRoyalblue: 0,
+        bagYellow: 0,
+        bagRed: 0,
+        bagBlack: 0,
+        bagAqua: 0,
     };
 
     this.changeCurrentPieces = this.changeCurrentPieces.bind(this);
@@ -32,27 +32,6 @@ class App extends Component {
   changeBagPieces(bagPieces) {
     this.setState(bagPieces);
   }
-
-  changeRoyalblue(bagRoyalblue) {
-    this.setState({bagRoyalblue});
-  }
-
-  changeYellow(bagYellow) {
-    this.setState({bagYellow});
-  }
-
-  changeRed(bagRed) {
-    this.setState({bagRed});
-  }
-
-  changeBlack(bagBlack) {
-    this.setState({bagBlack});
-  }
-
-  changeAqua(bagAqua) {
-    this.setState({bagAqua});
-  }
-
 
   changeTurn(playerTurn) {
     this.setState({playerTurn});
@@ -71,12 +50,17 @@ class App extends Component {
       let board3 = this.refs.Board3;
       let board4 = this.refs.Board4;
 
-      board1.scoreWall();
-      board2.scoreWall();
-      board3.scoreWall();
-      board4.scoreWall();
+      await board1.scoreWall();
+      await board2.scoreWall();
+      await board3.scoreWall();
+      await board4.scoreWall();
 
-      await this.setState({scoringTime: false});
+      await this.setState((prevState) => {
+                  return {scoringTime: false,
+                          playerTurn: prevState.firstTaken, 
+                          firstTaken: 0
+                        };
+      });
     }
   }
 
@@ -117,6 +101,12 @@ class App extends Component {
                firstTaken={this.state.firstTaken}
                playerColor="red"
                changeScoringTime={this.changeScoringTime}
+               changeBagPieces={this.changeBagPieces}
+               bagRoyalblue={this.state.bagRoyalblue}
+               bagYellow={this.state.bagYellow}
+               bagRed={this.state.bagRed}
+               bagBlack={this.state.bagBlack}
+               bagAqua={this.state.bagAqua}
           />
       </div>
 
@@ -133,6 +123,12 @@ class App extends Component {
                                           playerColor="black"
                                           scoringTime={this.state.scoringTime}
                                           changeScoringTime={this.changeScoringTime}
+                                          changeBagPieces={this.changeBagPieces}
+                                          bagRoyalblue={this.state.bagRoyalblue}
+                                          bagYellow={this.state.bagYellow}
+                                          bagRed={this.state.bagRed}
+                                          bagBlack={this.state.bagBlack}
+                                          bagAqua={this.state.bagAqua}
                                         /></div><div style={{
                                                           display:"inline-block",
                                                           width: "1350px",
@@ -152,11 +148,6 @@ class App extends Component {
                                                           bagRed={this.state.bagRed}
                                                           bagBlack={this.state.bagBlack}
                                                           bagAqua={this.state.bagAqua}
-                                                          changeRoyalblue={this.changeRoyalblue}
-                                                          changeYellow={this.changeYellow}
-                                                          changeRed={this.changeRed}
-                                                          changeBlack={this.changeBlack}
-                                                          changeAqua={this.changeAqua}
                                                           changeBagPieces={this.changeBagPieces}
                                                         /></div><div 
                                                           className="rotate-board270"
@@ -171,7 +162,13 @@ class App extends Component {
                                                           firstTaken={this.state.firstTaken}
                                                           playerColor="blue"
                                                           scoringTime={this.state.scoringTime}
-                                                          changeScoringTime={this.changeScoringTime}/></div>
+                                                          changeScoringTime={this.changeScoringTime}
+                                                          changeBagPieces={this.changeBagPieces}
+                                                          bagRoyalblue={this.state.bagRoyalblue}
+                                                          bagYellow={this.state.bagYellow}
+                                                          bagRed={this.state.bagRed}
+                                                          bagBlack={this.state.bagBlack}
+                                                          bagAqua={this.state.bagAqua}/></div>
       </div>
 
       <div style={{margin:"0 auto", width: "846px", height: "702px"}}>
@@ -185,7 +182,13 @@ class App extends Component {
                firstTaken={this.state.firstTaken}
                playerColor="yellow"
                scoringTime={this.state.scoringTime}
-               changeScoringTime={this.changeScoringTime}/>
+               changeScoringTime={this.changeScoringTime}
+               changeBagPieces={this.changeBagPieces}
+               bagRoyalblue={this.state.bagRoyalblue}
+               bagYellow={this.state.bagYellow}
+               bagRed={this.state.bagRed}
+               bagBlack={this.state.bagBlack}
+               bagAqua={this.state.bagAqua}/>
       </div>
 
       </div>

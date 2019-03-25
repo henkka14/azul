@@ -55,7 +55,7 @@ class MidTable extends Component {
                          'bagYellow': bagYellow,
                          'bagRed': bagRed,
                          'bagBlack': bagBlack,
-                         'bagAqua': bagAqua
+                         'bagAqua': bagAqua,
                      };
 
         for (let i = 0; i < pieces.length; i++) {
