@@ -1,7 +1,7 @@
 /*Player text, score track table, pattern line table, wall table, arrow table and floor line table */
 .player-text {
 	height: 10%;
-	font-size: 1vw;
+	font-size: 0.7vw;
 	margin: 0;
 }
 
@@ -121,19 +121,19 @@
 	display: inline-block;
 	float: left;
 	height: 50%;
-	width: 33%;
+	width: 45%;
 }
 
 .arrow-wrap {
 	display: inline-block;
 	float: left;
 	height: 50%;
-	width: 33%;
+	width: 10%;
 }
 
 .wall-wrap {
 	display: block;
 	float: left;
 	height: 50%;
-	width: 33%;
+	width: 45%;
 }
