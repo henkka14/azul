@@ -370,11 +370,11 @@ class Board extends Component {
             let children = [];
 
             for (let x = 0; x < this.state.wall[y].length; x++) {
-                if (x === y) children.push(<Piece size={PIECE_SIZE}  pieceType="blue" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
-                else if ((y + 1) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="yellow" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
-                else if ((y + 2) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="red" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
-                else if ((y + 3) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="black" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
-                else if ((y + 4) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="aqua" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
+                if (x === y) children.push(<Piece size={PIECE_SIZE}  pieceType="blue" opacity={this.state.wall[y][x] ? 1 : 0.18}/>);
+                else if ((y + 1) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="yellow" opacity={this.state.wall[y][x] ? 1 : 0.18}/>);
+                else if ((y + 2) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="red" opacity={this.state.wall[y][x] ? 1 : 0.18}/>);
+                else if ((y + 3) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="black" opacity={this.state.wall[y][x] ? 1 : 0.18}/>);
+                else if ((y + 4) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="aqua" opacity={this.state.wall[y][x] ? 1 : 0.18}/>);
             }
 
             table.push(<tr className="wall-row">{children}</tr>);
