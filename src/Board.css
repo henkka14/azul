@@ -1,100 +1,139 @@
-.table-row {
-	display: flex;
-	line-height: 24px;
-	white-space: nowrap;
+/*Player text, score track table, pattern line table, wall table, arrow table and floor line table */
+.player-text {
+	height: 10%;
+	font-size: 1vw;
 	margin: 0;
-	padding: 0;
-	background: #ffffff;
-	border: 1px solid #e3e3e3;
 }
 
-.table-data {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-	line-height: 24px;
-	white-space: nowrap;
-	margin: 0;
-	padding: 0;
-	background: #ffffff;
-    border: 1px solid #e3e3e3;
-    width: 40px;
-    height: 40px;
+.score-table {
+	height: 95%;
+	border-collapse: collapse;
+    table-layout: fixed;
 }
 
-.figure-row {
-	line-height: 24px;
-	white-space: nowrap;
-	margin: 0;
-	padding: 0;
-	background: #ffffff;
-	border: 1px solid #e3e3e3;
-}
-
-.figure-data {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-	line-height: 24px;
-	white-space: nowrap;
-	margin: 0;
-	padding: 0;
-	background: #ffffff;
-    border: 1px solid #e3e3e3;
-    width: 70px;
-    height: 70px;
-    background-color: cornsilk;
-}
-
-.wall-row {
-	line-height: 24px;
-	white-space: nowrap;
-	margin: 0;
-	padding: 0;
-	background: #ffffff;
-	border: 1px solid black;
-}
-
-.wall-data {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-	line-height: 24px;
-	white-space: nowrap;
-	margin: 0;
-	padding: 0;
-	background: #ffffff;
-    border: 1px solid #e3e3e3;
-    width: 70px;
-    height: 70px;
+.pattern-table {
+	border-collapse: collapse;
+	table-layout: fixed;
+	margin: 0 auto;
 }
 
 .arrow-table {
-    display: inline-block;
-    width: 100px;
-    
+	border-collapse: collapse;
+	table-layout: fixed;
+	margin: 0 auto;
 }
 
-.arrow-data {
-    width: 100px;
-    height: 70px;
-}
-
-.floor-row-data {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-	line-height: 24px;
-	white-space: nowrap;
-	margin: 0;
-	padding: 0;
-	background: #ffffff;
-    border: 1px solid #e3e3e3;
-    width: 90px;
-    height: 90px;
-    background-color: beige;
+.wall-table {
+	border-collapse: collapse;
+	table-layout: fixed;
+	margin: 0 auto;
 }
 
 .floor-table {
-    margin-top: 10px;
+	border-collapse: collapse;
+	table-layout: fixed;
+	margin: 0 auto;
+}
+
+
+/*Score table tr, pattern tr, arrow tr and floor table tr */
+
+.score-table-row {
+	line-height: 0px;
+}
+
+.pattern-row {
+	line-height: 0px;
+}
+
+.arrow-row {
+	line-height: 0px;
+}
+
+.wall-row {
+	line-height: 0px;
+}
+
+.floor-row {
+	line-height: 0px;
+}
+
+
+/*Score table td, patten table td(s) and floor table td */
+
+.score-table-td {
+	width: 5.5%;
+	height: 20%;
+	font-size: 0.1em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.pattern-none-td {
+	width: 1vw;
+	height: 1vw;
+}
+
+.pattern-td {
+	width: 2vh;
+	height: 2vh;
+    border: 0.1px solid #e3e3e3;
+    background-color: cornsilk;
+}
+
+.arrow-td {
+	height: 100%;
+	font-size: 1.8vh;
+}
+
+
+/*Image style for floor row */
+
+.neg-number {
+    margin: 0;
+	padding: 0;
+	width: 0.8vw;
+	height: 0.4vw;
+}
+
+.img-style {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/*Pattern, arrow and wall wrappers */
+
+.score-wrap {
+	display: block;
+	height: 30%;
+	width: 100%;
+}
+
+.floor-wrap {
+	display: block;
+	float: left;
+	height: 10%;
+	width: 100%;
+}
+
+.pattern-wrap {
+	display: inline-block;
+	float: left;
+	height: 50%;
+	width: 33%;
+}
+
+.arrow-wrap {
+	display: inline-block;
+	float: left;
+	height: 50%;
+	width: 33%;
+}
+
+.wall-wrap {
+	display: block;
+	float: left;
+	height: 50%;
+	width: 33%;
 }

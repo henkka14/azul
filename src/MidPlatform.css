@@ -1,0 +1,17 @@
+.mid-platform {
+    border-collapse: collapse;
+    table-layout: fixed;
+    padding: 0;
+    margin: 0;
+}
+
+.mid-platform-row {
+    line-height: 0px;
+}
+
+.piece-empty {
+    width: 1.5vw;
+    height: 1.5vw;
+    margin: 0;
+    padding: 0;
+}

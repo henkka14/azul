@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './Board.css';
 import Piece from './Piece.js';
+import negOne from './img/negOne.jpg';
+import negTwo from './img/negTwo.jpg';
+import negThree from './img/negThree.jpg';
+
 
 const MINUS_TILES = [
         1,
@@ -14,12 +18,14 @@ const MINUS_TILES = [
 ];
 
 const TYPES = [
-    "royalblue",
+    "blue",
     "yellow",
     "red",
     "black",
     "aqua",
 ];
+
+const PIECE_SIZE = "1vw";
 
 class Board extends Component {
 
@@ -41,7 +47,7 @@ class Board extends Component {
     }
 
     scoreFinalPoints() {
-        let tokens = {'royalblue': 0,
+        let tokens = {'blue': 0,
                       'yellow': 0,
                       'red': 0,
                       'black': 0,
@@ -66,7 +72,7 @@ class Board extends Component {
                 finalPoints += 7;
         }
 
-        if (tokens.royalblue === 5) {
+        if (tokens.blue === 5) {
             finalPoints += 10;
         }
         if (tokens.yellow === 5) {
@@ -89,10 +95,10 @@ class Board extends Component {
     }
 
     async boardClicked(e, row) {
-        const {chooseMid, changeMid, currentPieces, playerNumber, playerTurn, changeTurn, firstTaken, bagRoyalblue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
+        const {chooseMid, changeMid, currentPieces, playerNumber, playerTurn, changeTurn, firstTaken, bagBlue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
         
         let bagPieces = {
-            'bagRoyalblue': bagRoyalblue,
+            'bagBlue': bagBlue,
             'bagYellow': bagYellow,
             'bagRed': bagRed,
             'bagBlack': bagBlack,
@@ -100,7 +106,7 @@ class Board extends Component {
         };
 
         let mapBagTypes = {
-            'royalblue': 'bagRoyalblue',
+            'blue': 'bagBlue',
             'yellow': 'bagYellow',
             'red': 'bagRed',
             'black': 'bagBlack',
@@ -132,7 +138,7 @@ class Board extends Component {
             if (firstTaken == playerNumber && !this.state.tookFirst) {
                 await this.setState((state) => {
                     if (state.floorRow.length < 7)
-                        state.floorRow.push("lavender");
+                        state.floorRow.push("numberOne");
                     return {floorRow: state.floorRow, tookFirst: true};
                 });
             }
@@ -145,10 +151,10 @@ class Board extends Component {
     }
 
     async floorClicked(e) {
-        const {chooseMid, changeMid, currentPieces, playerTurn, changeTurn, bagRoyalblue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
+        const {chooseMid, changeMid, currentPieces, playerTurn, changeTurn, bagBlue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
 
         let bagPieces = {
-            'bagRoyalblue': bagRoyalblue,
+            'bagBlue': bagBlue,
             'bagYellow': bagYellow,
             'bagRed': bagRed,
             'bagBlack': bagBlack,
@@ -156,7 +162,7 @@ class Board extends Component {
         };
 
         let mapBagTypes = {
-            'royalblue': 'bagRoyalblue',
+            'blue': 'bagBlue',
             'yellow': 'bagYellow',
             'red': 'bagRed',
             'black': 'bagBlack',
@@ -185,34 +191,11 @@ class Board extends Component {
 
     }
 
-    scoreTable = () => {
-        let table = [];
-        const {playerColor} = this.props;
-
-        for (let i=0; i < this.state.height; i++){
-            let children = [];
-
-            for (let j=0; j < this.state.width; j++) {
-                let bgColor = 20*i+j+1===this.state.scoreTrack ? playerColor : "navajowhite";
-
-                if (j === 4) children.push(<td className="table-data" style={{backgroundColor:bgColor}}>{20*i+5}</td>);
-                else if (j === 9) children.push(<td className="table-data" style={{backgroundColor:bgColor}}>{20*i+10}</td>);
-                else if (j === 14) children.push(<td className="table-data" style={{backgroundColor:bgColor}}>{20*i+15}</td>);
-                else if (j === 19) children.push(<td className="table-data" style={{backgroundColor:bgColor}}>{20*i+20}</td>);
-                else children.push(<td className="table-data" style={{backgroundColor:bgColor}}></td>);
-            }
-            
-            table.push(<tr className="table-row">{children}</tr>);
-        }
-
-        return table;
-    }
-
     scoreWall = async () => {
-        const {changeFinalRound, bagRoyalblue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
+        const {changeFinalRound, bagBlue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
         let scoringRows = [];
         let bagPieces = {
-            'bagRoyalblue': bagRoyalblue,
+            'bagBlue': bagBlue,
             'bagYellow': bagYellow,
             'bagRed': bagRed,
             'bagBlack': bagBlack,
@@ -220,7 +203,7 @@ class Board extends Component {
         };
 
         let mapBagTypes = {
-            'royalblue': 'bagRoyalblue',
+            'blue': 'bagBlue',
             'yellow': 'bagYellow',
             'red': 'bagRed',
             'black': 'bagBlack',
@@ -246,7 +229,7 @@ class Board extends Component {
                 });
             }
         }
-        console.log(scoringRows);
+        
         for (let row of scoringRows) {
 
             let wall_y = row.length-1;
@@ -256,7 +239,7 @@ class Board extends Component {
             let scoreColumn = 0;
             let scoreTotal = 0;
 
-            if (scoringTileColor == "royalblue") {
+            if (scoringTileColor == "blue") {
                 wall_x = wall_y;
             }
             else if (scoringTileColor == "yellow") {
@@ -326,24 +309,59 @@ class Board extends Component {
         changeBagPieces(bagPieces);
     }
 
-    drawFigureRow = (onClick) => {
+    drawScoreTable = () => {
+        let table = [];
+        const {playerColor} = this.props;
+
+        for (let i=0; i < this.state.height; i++){
+            let children = [];
+
+            for (let j=0; j < this.state.width; j++) {
+                let bgColor = 20*i+j+1===this.state.scoreTrack ? playerColor : "navajowhite";
+
+                if (j === 4) children.push(<td className="score-table-td" style={{backgroundColor:bgColor}}>{20*i+5}</td>);
+                else if (j === 9) children.push(<td className="score-table-td" style={{backgroundColor:bgColor}}>{20*i+10}</td>);
+                else if (j === 14) children.push(<td className="score-table-td" style={{backgroundColor:bgColor}}>{20*i+15}</td>);
+                else if (j === 19) children.push(<td className="score-table-td" style={{backgroundColor:bgColor}}>{20*i+20}</td>);
+                else children.push(<td className="score-table-td" style={{backgroundColor:bgColor}}></td>);
+            }
+            
+            table.push(<tr className="score-table-row">{children}</tr>);
+        }
+
+        return table;
+    }
+
+    drawPatternRow = () => {
         let table = [];
 
         for (let row of this.state.figureRow) {
             let children = [];
 
             for (let i = 0; i < 5 - row.length; i++) {
-                children.push(<td></td>);
+                children.push(<td className="pattern-none-td"></td>);
             }
             for (let data of row) {
-                children.push(data ? <Piece pieceType={data} /> : <td className="figure-data"></td>);
+                children.push(data ? <Piece size={PIECE_SIZE}  pieceType={data}/> : <Piece size={PIECE_SIZE} pieceType="emptyTile" />);
             }
 
-            table.push(<tr ref={"row"+row.length} onClick={(e) => this.boardClicked(e, row.length)} className="figure-row">{children}</tr>);
+            table.push(<tr className="pattern-row" ref={"row"+row.length} onClick={(e) => this.boardClicked(e, row.length)}>{children}</tr>);
         }
 
         return table;
     }
+
+
+    drawArrows = () => {
+        return([
+                <tr className="arrow-row"><td className="arrow-td"><i class="fas fa-arrow-right fa-1x"></i></td></tr>,
+                <tr className="arrow-row"><td className="arrow-td"><i class="fas fa-arrow-right fa-1x"></i></td></tr>,
+                <tr className="arrow-row"><td className="arrow-td"><i class="fas fa-arrow-right fa-1x"></i></td></tr>,
+                <tr className="arrow-row"><td className="arrow-td"><i class="fas fa-arrow-right fa-1x"></i></td></tr>,
+                <tr className="arrow-row"><td className="arrow-td"><i class="fas fa-arrow-right fa-1x"></i></td></tr>,
+        ]);
+    }
+
 
     drawWall = () => {
         let table = [];
@@ -352,26 +370,11 @@ class Board extends Component {
             let children = [];
 
             for (let x = 0; x < this.state.wall[y].length; x++) {
-                if (x === y) children.push(<td className="wall-data" style={{
-                    backgroundColor: "royalblue",
-                    opacity: this.state.wall[y][x] ? 1 : 0.08,
-                }}></td>);
-                else if ((y + 1) % 5 === x) children.push(<td className="wall-data" style={{
-                    backgroundColor: "yellow",
-                    opacity: this.state.wall[y][x] ? 1 : 0.08,
-                }}></td>);
-                else if ((y + 2) % 5 === x) children.push(<td className="wall-data" style={{
-                    backgroundColor: "red",
-                    opacity: this.state.wall[y][x] ? 1 : 0.08,
-                }}></td>);
-                else if ((y + 3) % 5 === x) children.push(<td className="wall-data" style={{
-                    backgroundColor: "black",
-                    opacity: this.state.wall[y][x] ? 1 : 0.08,
-                }}></td>);
-                else if ((y + 4) % 5 === x) children.push(<td className="wall-data" style={{
-                    backgroundColor: "aqua",
-                    opacity: this.state.wall[y][x] ? 1 : 0.08,
-                }}></td>);
+                if (x === y) children.push(<Piece size={PIECE_SIZE}  pieceType="blue" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
+                else if ((y + 1) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="yellow" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
+                else if ((y + 2) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="red" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
+                else if ((y + 3) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="black" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
+                else if ((y + 4) % 5 === x) children.push(<Piece size={PIECE_SIZE}  pieceType="aqua" opacity={this.state.wall[y][x] ? 1 : 0.25}/>);
             }
 
             table.push(<tr className="wall-row">{children}</tr>);
@@ -379,60 +382,89 @@ class Board extends Component {
         return table;
     }
 
-    drawArrows = () => {
-        return([
-                <tr className="arrow-data"><td><i class="fas fa-arrow-right fa-4x"></i></td></tr>,
-                <tr className="arrow-data"><td><i class="fas fa-arrow-right fa-4x"></i></td></tr>,
-                <tr className="arrow-data"><td><i class="fas fa-arrow-right fa-4x"></i></td></tr>,
-                <tr className="arrow-data"><td><i class="fas fa-arrow-right fa-4x"></i></td></tr>,
-                <tr className="arrow-data"><td><i class="fas fa-arrow-right fa-4x"></i></td></tr>,
-        ]
-        );
-    }
-
 
     drawFloorRow() {
-        return(
-            <tr onClick={(e) => this.floorClicked(e)}>
-                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[0]}}>-1</td>
-                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[1]}}>-1</td>
-                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[2]}}>-2</td>
-                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[3]}}>-2</td>
-                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[4]}}>-2</td>
-                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[5]}}>-3</td>
-                <td className="floor-row-data" style={{backgroundColor: this.state.floorRow[6]}}>-3</td>
-            </tr>
+        return([
+            <tr style={{lineHeight: "0px"}}>
+                <td className="neg-number">
+                <img src={negOne} alt="" className="img-style"></img>
+                </td>
+                <td className="neg-number">
+                <img src={negOne} alt="" className="img-style"></img>
+                </td>
+                <td className="neg-number">
+                <img src={negTwo} alt="" className="img-style"></img>
+                </td>
+                <td className="neg-number">
+                <img src={negTwo} alt="" className="img-style"></img>
+                </td>
+                <td className="neg-number">
+                <img src={negTwo} alt="" className="img-style"></img>
+                </td>
+                <td className="neg-number">
+                <img src={negThree} alt="" className="img-style"></img>
+                </td>
+                <td className="neg-number">
+                <img src={negThree} alt="" className="img-style"></img>
+                </td>
+            </tr>,
+            <tr onClick={(e) => this.floorClicked(e)} style={{lineHeight: "0px"}}>
+                {this.state.floorRow[0] === undefined ? 
+                <Piece size="0.8vw"  pieceType="emptyTile"/>:
+                <Piece size="0.8vw"  pieceType={this.state.floorRow[0]}/>}
+                {this.state.floorRow[1] === undefined ? 
+                <Piece size="0.8vw"  pieceType="emptyTile"/>:
+                <Piece size="0.8vw"  pieceType={this.state.floorRow[1]}/>}
+                {this.state.floorRow[2] === undefined ? 
+                <Piece size="0.8vw"  pieceType="emptyTile"/>:
+                <Piece size="0.8vw"  pieceType={this.state.floorRow[2]}/>}
+                {this.state.floorRow[3] === undefined ? 
+                <Piece size="0.8vw"  pieceType="emptyTile"/>:
+                <Piece size="0.8vw"  pieceType={this.state.floorRow[3]}/>}
+                {this.state.floorRow[4] === undefined ? 
+                <Piece size="0.8vw"  pieceType="emptyTile"/>:
+                <Piece size="0.8vw"  pieceType={this.state.floorRow[4]}/>}
+                {this.state.floorRow[5] === undefined ? 
+                <Piece size="0.8vw"  pieceType="emptyTile"/>:
+                <Piece size="0.8vw"  pieceType={this.state.floorRow[5]}/>}
+                {this.state.floorRow[6] === undefined ? 
+                <Piece size="0.8vw"  pieceType="emptyTile"/>:
+                <Piece size="0.8vw"  pieceType={this.state.floorRow[6]}/>}
+            </tr>,
+        ]
         );
     }
 
     render() {
         const {playerNumber} = this.props;
-        return(
-            <div>
-                <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/>
-                <h1 style={{textAlign: "center"}}>Player {playerNumber}</h1>
-                <table>
-                    {this.scoreTable()}
-                </table>
-
-                <table style={{display: "inline", float:"left"}}>
-                    {this.drawFigureRow()}
-                </table>
-
-                <table style={{display: "inline-block", float:"left", width:"100px"}}>
-                    {this.drawArrows()}
-                </table>
-
-                <table style={{display: "block"}}>
-                    {this.drawWall()}
-                </table>
-
-                <table className="floor-table">
-                    {this.drawFloorRow()}
-                </table>
-                
-            </div>
-        );
+        return([
+                <h4 className="player-text">Player {playerNumber}</h4>,
+                <div className="score-wrap">
+                    <table className="score-table">
+                        {this.drawScoreTable()}
+                    </table>
+                </div>,
+                <div className="pattern-wrap">
+                    <table className="pattern-table">
+                        {this.drawPatternRow()}
+                    </table>
+                </div>,
+                <div className="arrow-wrap">
+                    <table className="arrow-table">
+                        {this.drawArrows()}
+                    </table>
+                </div>,
+                <div className="wall-wrap">
+                    <table className="wall-table">
+                        {this.drawWall()}
+                    </table>
+                </div>,
+                <div className="floor-wrap">
+                    <table className="floor-table">
+                        {this.drawFloorRow()}
+                    </table>
+                </div>
+        ]);
     }
 }
 

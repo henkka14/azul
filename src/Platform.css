@@ -1,0 +1,10 @@
+.platform-table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    padding: 0;
+    margin: 0;
+}
+
+.platform-row {
+    line-height: 0px;
+}

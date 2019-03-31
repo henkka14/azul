@@ -1,34 +1,36 @@
 import React, {Component } from 'react';
-import ReactDOM from 'react-dom';
 import Platform from './Platform.js';
 import MidPlatform from './MidPlatform.js';
-import './MidTable.css';
+import Piece from './Piece.js';
+
 const pickRandom = require('pick-random');
 const EqualArray = require('equal-array').default;
 const eq = new EqualArray();
 
 const TYPES = [
-    "royalblue",
+    "blue",
     "yellow",
     "red",
     "black",
     "aqua",
-]
+];
 
 const BAG_TYPES = [
-    "bagRoyalblue",
+    "bagBlue",
     "bagYellow",
     "bagRed",
     "bagBlack",
     "bagAqua",
-]
+];
+
+const PIECE_SIZE = "1.5vw";
 
 class MidTable extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            royalblue: 20,
+            blue: 20,
             yellow: 20,
             red: 20,
             black: 20,
@@ -44,14 +46,15 @@ class MidTable extends Component {
         this.moveToMiddle = this.moveToMiddle.bind(this);
         this.checkIfMidEmpty = this.checkIfMidEmpty.bind(this);
         this.refillPieces = this.refillPieces.bind(this);
+        this.getPieces = this.getPieces.bind(this);
     }
 
 
     addPieces(tileNumber) {
-        const {bagRoyalblue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
+        const {bagBlue, bagYellow, bagRed, bagBlack, bagAqua, changeBagPieces} = this.props;
         let pieces = Array(4).fill(null);
         let bagPieces = {
-                         'bagRoyalblue': bagRoyalblue,
+                         'bagBlue': bagBlue,
                          'bagYellow': bagYellow,
                          'bagRed': bagRed,
                          'bagBlack': bagBlack,
@@ -71,7 +74,7 @@ class MidTable extends Component {
                 let filteredBagTypes = BAG_TYPES.filter(type => bagPieces[type] > 0);
                 if (filteredBagTypes.length > 0) {
                     let mapBagTypes = {
-                            'bagRoyalblue': 'royalblue',
+                            'bagBlue': 'blue',
                             'bagYellow': 'yellow',
                             'bagRed': 'red',
                             'bagBlack': 'black',
@@ -99,6 +102,15 @@ class MidTable extends Component {
         });
         
         return pieces;
+    }
+
+    getPieces() {
+        return {"blue": this.state.blue,
+                "yellow": this.state.yellow,
+                "red": this.state.red,
+                "black": this.state.black,
+                "aqua": this.state.aqua,
+            };
     }
 
     async checkIfMidEmpty() {
@@ -131,6 +143,7 @@ class MidTable extends Component {
             let pieceColor = event.target.getAttribute("type");
             let chosen = this.state.platformTiles[tileNumber].filter(item => item === pieceColor);
             let notChosen = this.state.platformTiles[tileNumber].filter(item => item !== pieceColor);
+            if (chosen.length > 0) {
             await this.setState(state => {
                         let arr = [];
                         Array.prototype.push.apply(arr, state.platformMidTiles);
@@ -150,6 +163,7 @@ class MidTable extends Component {
             this.checkIfMidEmpty();
             changeMid(false);
             changeCurrentPieces(chosen);
+        }
         }
     }
 
@@ -172,6 +186,7 @@ class MidTable extends Component {
         if (chooseMid) {
             let pieceColor = event.target.getAttribute("type");
             let chosen = this.state.platformMidTiles.filter(item => item === pieceColor);
+            if (chosen.length > 0) {
             await this.setState(state => {
                         let notChosen = this.state.platformMidTiles.filter(item => item !== pieceColor);
                         return {platformMidTiles: notChosen};
@@ -185,6 +200,7 @@ class MidTable extends Component {
             this.checkIfMidEmpty();
             changeMid(false);
             changeCurrentPieces(chosen);
+            }
         }
     }
 
@@ -203,7 +219,7 @@ class MidTable extends Component {
             <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 7)} pieces={this.state.platformTiles[7]} style={{position: "absolute", top: "35%", left: "70%"}}/>,
             <Platform onClick={(e) => finalRound ? null :this.moveToMiddle(e, 8)} pieces={this.state.platformTiles[8]} style={{position: "absolute", top: "15%", left: "50%"}}/>,
             <MidPlatform onClick={(e) => finalRound ? null : this.takeFromMiddle(e)} pieces={this.state.platformMidTiles.sort()} style={{position: "absolute", top: "35%", left: "30%"}}/>,
-            this.state.first ? <table><td className="number-one">1</td></table> : null,
+            this.state.first ? <table style={{tableLayout: "fixed", borderCollapse:"collapse", position: "absolute", top: "35%", left: "25%"}}><tr style={{lineHeight:"0px"}}><Piece pieceType="numberOne" size={PIECE_SIZE}/></tr></table> : null,
         ]
         );
     }
